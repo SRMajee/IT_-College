@@ -7,16 +7,19 @@ const PORT = 5555;
 const ADMIN_PASSWORD = "admin123";
 const ADMIN_TOKEN = "MANAGER_ACCESS_GRANTED_TOKEN_99";
 
+// --- 1. SETUP EJS ---
+app.set("view engine", "ejs");
+// Tell Express where to find the 'views' folder
+app.set("views", path.join(__dirname, "views"));
+
 app.use(bodyParser.json());
+// We can still serve static files (like CSS/images) from public if needed
 app.use(express.static(path.join(__dirname, "public")));
 
 // --- In-Memory Data Store ---
 const dataStore = {};
 
 const getStore = (ip) => {
-  // FIX 2: Better IP Normalization
-  // If IP is localhost (::1), make it 127.0.0.1
-  // If IP is IPv6 mapped (::ffff:192.168.x.x), strip the prefix to get just the numbers
   let clientIp = ip;
   if (clientIp === "::1") {
     clientIp = "127.0.0.1";
@@ -31,6 +34,12 @@ const getStore = (ip) => {
 };
 
 // --- Routes ---
+
+// NEW: Render the EJS Page
+app.get("/", (req, res) => {
+    // This looks for 'views/index.ejs' and renders it
+    res.render("index");
+});
 
 app.post("/api/auth", (req, res) => {
   const { password } = req.body;
@@ -52,9 +61,8 @@ app.post("/api/put", (req, res) => {
   if (!key || !value) return res.status(400).json({ message: "Missing data" });
 
   store[key] = value;
-  // Log the CLEAN IP so you know exactly what to type in the Manager box
-  const cleanIp =
-    req.ip === "::1" ? "127.0.0.1" : req.ip.replace("::ffff:", "");
+  
+  const cleanIp = req.ip === "::1" ? "127.0.0.1" : req.ip.replace("::ffff:", "");
   console.log(`[${cleanIp}] PUT: ${key} = ${value}`);
 
   res.json({ status: "OK", message: `Stored ${key}` });
@@ -70,31 +78,25 @@ app.get("/api/get", (req, res) => {
 
   if (targetIp) {
     if (clientToken === ADMIN_TOKEN) {
-      // Manager is requesting specific IP
       console.log(`[Manager] Accessing Target: [${targetIp}]`);
       storeToRead = getStore(targetIp);
     } else {
-      return res
-        .status(403)
-        .json({ value: "ACCESS DENIED: Manager role required" });
+      return res.status(403).json({ value: "ACCESS DENIED: Manager role required" });
     }
   } else {
-    // Guest reading own store
     storeToRead = getStore(req.ip);
   }
 
   const value = storeToRead[key];
-  // Log the CLEAN IP
-  const cleanIp =
-    req.ip === "::1" ? "127.0.0.1" : req.ip.replace("::ffff:", "");
+  const cleanIp = req.ip === "::1" ? "127.0.0.1" : req.ip.replace("::ffff:", "");
   console.log(`[${cleanIp}] GET: ${key} -> ${value || "<blank>"}`);
 
   res.json({ value: value ? value : "<blank>" });
 });
 
-// FIX 1: Listen on '0.0.0.0' explicitly to force IPv4 access from other computers
-app.listen(PORT, () => {
+// Listen on 0.0.0.0 for network access
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running!`);
   console.log(`- Local: http://localhost:${PORT}`);
-  console.log(`- Network: http://192.168.29.193:${PORT}`);
+  console.log(`- Network: Make sure to use your LAN IP (e.g., 192.168.29.7)`);
 });
