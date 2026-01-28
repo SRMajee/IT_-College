@@ -102,5 +102,6 @@ app.get("/api/get", (req, res) => {
 app.listen(PORT,  () => {
   console.log(`Server is running!`);
   console.log(`- Local: http://localhost:${PORT}`);
-  console.log(`- Network: Make sure to use your LAN IP (e.g., 192.168.29.7)`);
+  // console.log(`- Network: Make sure to use your LAN IP (e.g., 192.168.29.7)`);
 });
+

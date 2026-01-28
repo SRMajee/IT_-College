@@ -85,4 +85,6 @@ if __name__ == "__main__":
 
 # python client.py localhost 5555 put city Kolkata put country India get country get city get Institute
 # python client.py localhost 5555 put secret HiddenTreasure
-# python client.py localhost 5555 auth admin123 get 127.0.0.1:secret
+# python client.py 192.168.147.186 4000 auth admin123 get 192.168.147.103:city
+
+# python client.py 192.168.147.103 4000 put secret HiddenTreasure

@@ -83,7 +83,7 @@ def handle_client(conn, addr):
     finally:
         conn.close()
 
-def start_server(host='0.0.0.0', port=5555):
+def start_server(host='0.0.0.0', port=4000):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # Allow port reuse to avoid "Address already in use" errors on restart
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
