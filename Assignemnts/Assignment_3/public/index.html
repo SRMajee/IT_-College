@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Photo & Chat App</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="app-container">
+      <header>
+        <div class="mode-switch">
+          <button id="btn-global" class="active" onclick="setMode('global')">
+            Global Feed
+          </button>
+          <button id="btn-group" onclick="setMode('group')">Group Chat</button>
+        </div>
+        <div id="group-status" class="status-bar" style="display: none">
+          <span>Not in a group</span>
+        </div>
+      </header>
+
+      <main id="chat-window"></main>
+
+      <footer class="bottom-bar">
+        <div id="group-controls" style="display: none">
+          <input type="text" id="roomInput" placeholder="Room Name" />
+
+          <button
+            onclick="createGroup()"
+            class="btn-sm"
+            style="background-color: #27ae60; margin-right: 5px"
+          >
+            <i class="fas fa-plus"></i> Create
+          </button>
+
+          <button onclick="joinGroup()" class="btn-sm">
+            <i class="fas fa-sign-in-alt"></i> Join
+          </button>
+        </div>
+
+        <div class="input-wrapper">
+          <input
+            type="text"
+            id="username"
+            placeholder="Name"
+            class="name-input"
+          />
+
+          <label for="fileInput" class="icon-btn">
+            <i class="fas fa-paperclip"></i>
+          </label>
+          <input type="file" id="fileInput" accept="image/*" hidden />
+
+          <input
+            type="text"
+            id="msgInput"
+            placeholder="Type a message..."
+            class="msg-input"
+            onkeydown="handleEnter(event)"
+          />
+
+          <button onclick="sendMessage()" class="send-btn">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+
+        <div id="file-preview" class="preview-box" style="display: none">
+          <span id="file-name">image.jpg</span>
+          <button onclick="clearFile()">×</button>
+        </div>
+      </footer>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

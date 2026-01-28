@@ -1,46 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Async Photo Share</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Async Photo Share </title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <div class="container">
-        <header>
-            <h2>Photo Share App</h2>
-            <input type="text" id="username" placeholder="Enter your name..." />
-        </header>
+      <header>
+        <h2>Photo Share App</h2>
+        <input type="text" id="username" placeholder="Enter your name..." />
+      </header>
 
-        <main>
-            <div class="panel" id="public-panel">
-                <h3>(i) Public Feed</h3>
-                <div class="controls">
-                    <input type="file" id="publicFile" accept="image/*">
-                    <button onclick="sendPublic()">Share with Everyone</button>
-                </div>
-                <div id="public-feed" class="feed"></div>
-            </div>
+      <main>
+        <div class="panel" id="public-panel">
+          <h3>(i) Public Feed</h3>
+          <div class="controls">
+            <input type="file" id="publicFile" accept="image/*" />
+            <input
+              type="text"
+              id="publicComment"
+              placeholder="Comment (optional)..."
+            />
+            <button onclick="sendPublic()">Share with Everyone</button>
+          </div>
+          <div id="public-feed" class="feed"></div>
+        </div>
 
-            <div class="panel" id="group-panel">
-                <h3>(ii) Group Zone</h3>
-                <div class="controls">
-                    <input type="text" id="roomInput" placeholder="Room Name (e.g., 'CS-Project')">
-                    <button onclick="joinGroup()">Join Group</button>
-                </div>
-                <hr>
-                <div class="controls">
-                    <input type="file" id="groupFile" accept="image/*">
-                    <input type="text" id="groupComment" placeholder="Add a comment...">
-                    <button onclick="sendGroup()">Share to Group</button>
-                </div>
-                <div id="group-feed" class="feed"></div>
-            </div>
-        </main>
+        <div class="panel" id="group-panel">
+          <h3>(ii) Group Zone</h3>
+          <div class="controls">
+            <input
+              type="text"
+              id="roomInput"
+              placeholder="Room Name (e.g., 'CS-Project')"
+            />
+            <button onclick="joinGroup()">Join Group</button>
+          </div>
+          <hr />
+          <div class="controls">
+            <input type="file" id="groupFile" accept="image/*" />
+            <input
+              type="text"
+              id="groupComment"
+              placeholder="Add a comment..."
+            />
+            <button onclick="sendGroup()">Share to Group</button>
+          </div>
+          <div id="group-feed" class="feed"></div>
+        </div>
+      </main>
     </div>
 
-    <script src="/socket.io/socket.io.js"></script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>

@@ -7,16 +7,12 @@ const PORT = 3000;
 const ADMIN_PASSWORD = "admin123";
 const ADMIN_TOKEN = "MANAGER_ACCESS_GRANTED_TOKEN_99";
 
-// --- 1. SETUP EJS ---
 app.set("view engine", "ejs");
-// Tell Express where to find the 'views' folder
 app.set("views", path.join(__dirname, "views"));
 
 app.use(bodyParser.json());
-// We can still serve static files (like CSS/images) from public if needed
 app.use(express.static(path.join(__dirname, "public")));
 
-// --- In-Memory Data Store ---
 const dataStore = {};
 
 const getStore = (ip) => {
@@ -35,9 +31,7 @@ const getStore = (ip) => {
 
 // --- Routes ---
 
-// NEW: Render the EJS Page
 app.get("/", (req, res) => {
-  // This looks for 'views/index.ejs' and renders it
   res.render("index");
 });
 
@@ -98,10 +92,8 @@ app.get("/api/get", (req, res) => {
   res.json({ value: value ? value : "<blank>" });
 });
 
-// Listen on 0.0.0.0 for network access
 app.listen(PORT,  () => {
   console.log(`Server is running!`);
   console.log(`- Local: http://localhost:${PORT}`);
-  // console.log(`- Network: Make sure to use your LAN IP (e.g., 192.168.29.7)`);
 });
 

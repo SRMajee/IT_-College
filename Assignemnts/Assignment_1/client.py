@@ -12,14 +12,11 @@ def main():
     port = int(sys.argv[2])
 
     try:
-        # Create a socket connection
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((hostname, port))
 
-        # Use file-like object for reading responses line-by-line
         server_reader = sock.makefile("r")
 
-        # Start parsing arguments from index 3 (after script, host, port)
         i = 3
         args = sys.argv
 
@@ -31,14 +28,12 @@ def main():
                     key = args[i + 1]
                     val = args[i + 2]
 
-                    # Send command (must end with newline for server readline)
                     msg = f"put {key} {val}\n"
                     sock.sendall(msg.encode())
 
-                    # Read response (Consume the "OK")
                     server_reader.readline()
 
-                    i += 3  # Skip put, key, value
+                    i += 3 
                 else:
                     print("Invalid PUT arguments", file=sys.stderr)
                     break
@@ -47,11 +42,9 @@ def main():
                 if i + 1 < len(args):
                     key = args[i + 1]
 
-                    # Send command
                     msg = f"get {key}\n"
                     sock.sendall(msg.encode())
 
-                    # Read response and strip the trailing newline
                     response = server_reader.readline().strip()
                     print(response)
 
@@ -69,7 +62,6 @@ def main():
                     print(response)
                     i += 2
             else:
-                # If command is unknown or just a stray argument, skip it
                 i += 1
 
         sock.close()
@@ -83,8 +75,9 @@ def main():
 if __name__ == "__main__":
     main()
 
-# python client.py localhost 5555 put city Kolkata put country India get country get city get Institute
-# python client.py localhost 5555 put secret HiddenTreasure
+# python client.py localhost 4000 put city Kolkata put country India get country get city get Institute
+# python client.py 127.0.0.2 4000 put secret HiddenTreasure
+# python client.py 127.0.0.2 4000 auth admin123 get 127.0.0.1:secret
 # python client.py 192.168.147.186 4000 auth admin123 get 192.168.147.103:city
 
 # python client.py 192.168.147.103 4000 put secret HiddenTreasure
