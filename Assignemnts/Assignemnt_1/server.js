@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 
 const app = express();
-const PORT = 5555;
+const PORT = 3000;
 const ADMIN_PASSWORD = "admin123";
 const ADMIN_TOKEN = "MANAGER_ACCESS_GRANTED_TOKEN_99";
 
@@ -37,8 +37,8 @@ const getStore = (ip) => {
 
 // NEW: Render the EJS Page
 app.get("/", (req, res) => {
-    // This looks for 'views/index.ejs' and renders it
-    res.render("index");
+  // This looks for 'views/index.ejs' and renders it
+  res.render("index");
 });
 
 app.post("/api/auth", (req, res) => {
@@ -61,8 +61,9 @@ app.post("/api/put", (req, res) => {
   if (!key || !value) return res.status(400).json({ message: "Missing data" });
 
   store[key] = value;
-  
-  const cleanIp = req.ip === "::1" ? "127.0.0.1" : req.ip.replace("::ffff:", "");
+
+  const cleanIp =
+    req.ip === "::1" ? "127.0.0.1" : req.ip.replace("::ffff:", "");
   console.log(`[${cleanIp}] PUT: ${key} = ${value}`);
 
   res.json({ status: "OK", message: `Stored ${key}` });
@@ -81,21 +82,24 @@ app.get("/api/get", (req, res) => {
       console.log(`[Manager] Accessing Target: [${targetIp}]`);
       storeToRead = getStore(targetIp);
     } else {
-      return res.status(403).json({ value: "ACCESS DENIED: Manager role required" });
+      return res
+        .status(403)
+        .json({ value: "ACCESS DENIED: Manager role required" });
     }
   } else {
     storeToRead = getStore(req.ip);
   }
 
   const value = storeToRead[key];
-  const cleanIp = req.ip === "::1" ? "127.0.0.1" : req.ip.replace("::ffff:", "");
+  const cleanIp =
+    req.ip === "::1" ? "127.0.0.1" : req.ip.replace("::ffff:", "");
   console.log(`[${cleanIp}] GET: ${key} -> ${value || "<blank>"}`);
 
   res.json({ value: value ? value : "<blank>" });
 });
 
 // Listen on 0.0.0.0 for network access
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT,  () => {
   console.log(`Server is running!`);
   console.log(`- Local: http://localhost:${PORT}`);
   console.log(`- Network: Make sure to use your LAN IP (e.g., 192.168.29.7)`);
