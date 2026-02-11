@@ -35,12 +35,15 @@ main {
 }
 
 .feed {
-  height: 400px;
-  overflow-y: auto;
+  height: 450px;
+  overflow-y: auto; /* Enables scrolling */
   border: 1px solid #eee;
   margin-top: 15px;
   padding: 10px;
   background: #fafafa;
+  /* Ensure content flows top to bottom naturally */
+  display: flex;
+  flex-direction: column;
 }
 
 .post {
@@ -49,12 +52,19 @@ main {
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
+  position: relative;
 }
 
 .post img {
   max-width: 100%;
   border-radius: 4px;
   margin-top: 5px;
+  display: block;
+}
+
+.post img[src="null"],
+.post img[src="undefined"] {
+  display: none;
 }
 
 .meta {
@@ -68,26 +78,68 @@ main {
   color: #333;
   font-style: italic;
 }
-.post img {
-  max-width: 100%;
-  border-radius: 4px;
-  margin-top: 5px;
-  display: block; /* Ensures it sits nicely on its own line */
-}
-
-/* Hide empty images if any glitch occurs (optional safety) */
-.post img[src="null"],
-.post img[src="undefined"] {
-  display: none;
-}
 
 .notification {
-    text-align: center;
-    color: #888;
-    font-size: 0.9em;
-    font-style: italic;
-    margin: 10px 0;
-    padding: 5px;
-    background: #f0f0f0;
-    border-radius: 4px;
+  text-align: center;
+  color: #888;
+  font-size: 0.9em;
+  font-style: italic;
+  margin: 10px 0;
+  padding: 5px;
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.reply-header {
+  background: #f0f4c3;
+  font-size: 0.75em;
+  padding: 4px;
+  margin-bottom: 5px;
+  border-radius: 3px;
+  border-left: 3px solid #cddc39;
+  color: #555;
+}
+
+.actions {
+  margin-top: 8px;
+  text-align: right;
+}
+
+.btn-reply {
+  background-color: #eee;
+  border: none;
+  padding: 4px 8px;
+  font-size: 0.8em;
+  cursor: pointer;
+  border-radius: 3px;
+  color: #555;
+}
+
+.btn-reply:hover {
+  background-color: #ddd;
+  color: #000;
+}
+
+.inline-reply-box {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f1f8e9;
+  border-top: 1px dashed #ccc;
+  border-radius: 4px;
+}
+
+.reply-input {
+  width: 95%;
+  margin-bottom: 5px;
+}
+
+.reply-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reply-file-sm {
+  font-size: 0.8em;
+  max-width: 150px;
 }
