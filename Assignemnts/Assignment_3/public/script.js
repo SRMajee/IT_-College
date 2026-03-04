@@ -216,7 +216,7 @@ async function sendMessage() {
 
     if (!text && !file) return;
 
-    if (/\b\d{6}\b/.test(text)) {
+    if (/\b[a-zA-Z0-9]{4,6}\b/.test(text)) {
       const confirmed = await confirmOTPWarning();
       if (!confirmed) return;
     }
