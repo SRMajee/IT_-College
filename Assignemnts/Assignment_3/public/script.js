@@ -222,8 +222,14 @@ async function sendMessage() {
     }
 
     let imageBase64 = null;
+    let videoBase64 = null;
     if (file) {
-      imageBase64 = await getBase64(file);
+      const base64Data = await getBase64(file);
+      if (file.type.startsWith("video/")) {
+        videoBase64 = base64Data;
+      } else {
+        imageBase64 = base64Data;
+      }
     }
 
     const msgId =
@@ -234,6 +240,7 @@ async function sendMessage() {
       username: user,
       text: text,
       image: imageBase64,
+      video: videoBase64,
       room: currentMode === "group" ? currentRoom : null,
     };
 
@@ -363,10 +370,10 @@ function appendMessage(data) {
         </div>`;
   }
   content += `</div>`;
-
   if (data.image) content += `<img src="${data.image}" class="msg-img" />`;
+  if (data.video)
+    content += `<video src="${data.video}" class="msg-video" controls></video>`;
   if (data.text) content += `<div class="msg-text">${data.text}</div>`;
-
   content += `<span class="msg-meta">${time} ${isMe ? "✓✓" : ""}</span>`;
 
   div.innerHTML = content;
@@ -466,7 +473,11 @@ socket.on("receive_private", (data) => {
     updateBadge(otherPerson);
 
     // Show Desktop Notification
-    const notifBody = data.text ? data.text : "Sent an image";
+    const notifBody = data.text
+      ? data.text
+      : data.video
+        ? "Sent a video"
+        : "Sent an image";
     showNotification(`New message from ${data.username}`, notifBody);
   }
 });

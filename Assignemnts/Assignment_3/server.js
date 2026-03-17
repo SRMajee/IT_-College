@@ -46,6 +46,7 @@ const messageSchema = new mongoose.Schema({
   username: String,
   text: String,
   image: String,
+  video: String,
   room: { type: String, required: true },
   targetUser: String,
   timestamp: { type: Date, default: Date.now },
@@ -165,7 +166,25 @@ function saveImageToDisk(base64Data) {
     return null;
   }
 }
+// --- HELPER FUNCTIONS ---
 
+function saveVideoToDisk(base64Data) {
+  try {
+    const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    if (!matches || matches.length !== 3) return null;
+    const buffer = Buffer.from(matches[2], "base64");
+
+    let ext = ".mp4";
+    if (matches[1] === "video/webm") ext = ".webm";
+    if (matches[1] === "video/ogg") ext = ".ogg";
+
+    const filename = `${Date.now()}-${Math.floor(Math.random() * 1000000)}${ext}`;
+    fs.writeFileSync(path.join(UPLOAD_DIR, filename), buffer);
+    return `/uploads/${filename}`;
+  } catch (e) {
+    return null;
+  }
+}
 // 1. LIMIT MESSAGES IN DB TO 100 PER ROOM
 async function trimRoomMessages(roomName) {
   try {
@@ -243,7 +262,7 @@ io.on("connection", async (socket) => {
         return;
       }
       if (data.image) data.image = saveImageToDisk(data.image);
-
+      if (data.video) data.video = saveVideoToDisk(data.video);
       try {
         await Message.create(data);
         await trimRoomMessages(data.room); // Enforce Limit
@@ -261,6 +280,7 @@ io.on("connection", async (socket) => {
   socket.on("private_message", async (data) => {
     try {
       if (data.image) data.image = saveImageToDisk(data.image);
+      if (data.video) data.video = saveVideoToDisk(data.video);
       const participants = [data.username, data.targetUser].sort();
       data.room = `private_${participants[0]}_${participants[1]}`;
 
